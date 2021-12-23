@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-gnn=hp#p$i_hm^!loo^=@1!npdoi6*2swx=g@)j@h(i4jv)l9)
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "192.168.0.100"]
 
 
 # Application definition
@@ -37,10 +37,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
-    "playground",
-    "store",
-    "tags",
-    "likes",
+    "playground.apps.PlaygroundConfig",
+    "store.apps.StoreConfig",
+    "tags.apps.TagsConfig",
+    "likes.apps.LikesConfig",
 ]
 
 MIDDLEWARE = [

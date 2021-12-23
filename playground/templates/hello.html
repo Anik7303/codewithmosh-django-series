@@ -14,6 +14,9 @@
     {% else %}
     <h1>Hello World</h1>
     {% endif %}
+    {% if result_count %}
+    <h3>No of entries: {{result_count}}</h3>
+    {% endif %}
     {% if products %}
     <ol>
         {% for product in products %}

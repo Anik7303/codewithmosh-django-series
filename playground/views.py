@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from store.models import Product
 
 # Create your views here.
@@ -26,9 +27,21 @@ def say_hello(request):
     #     "-collection__id"
     # )[:10]
     # products = Product.objects.filter(last_update__year=2021)[:10]
-    products = Product.objects.filter(description__isnull=True)[:10]
+    # products = Product.objects.filter(description__isnull=True)[:10]
+    # AND query
+    # products = Product.objects.filter(inventory__lt=10, unit_price__gt=20)
+    # products = Product.objects.filter(inventory__lt=10).filter(unit_price__gt=20)
+    # OR query | not query
+    # products = Product.objects.filter(Q(inventory__lt=10) & Q(unit_price__gt=20))
+    # products = Product.objects.filter(Q(inventory__lt=10) | Q(unit_price__gt=20))
+    products = Product.objects.filter(Q(inventory__lt=10) | ~Q(unit_price__gt=20))
 
     # return HttpResponse('Hello World')
     # return render(request, 'hello.html', {'name': 'anik'})
-    return render(request, "hello.html", {"name": "anik", "products": products})
     # return render(request, "hello.html", {"name": "anik", "product": product})
+    # return render(request, "hello.html", {"name": "anik", "products": products})
+    return render(
+        request,
+        "hello.html",
+        {"name": "anik", "products": products, "result_count": products.count()},
+    )

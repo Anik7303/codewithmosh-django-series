@@ -7,7 +7,7 @@ from store.models import Product
 # Create your views here.
 
 
-def say_hello(request):
+def index(request):
     # query_set = Product.objects.all()
     # products = query_set[0:10]
     # try:
@@ -23,9 +23,6 @@ def say_hello(request):
     # products = Product.objects.filter(title__iendswith="co")[:10]
     # products = Product.objects.filter(unit_price__range=(20, 30))[:10]
     # products = Product.objects.filter(collection__id__range=(1, 3))[0:10]
-    # products = Product.objects.filter(collection__id__range=(1, 3)).order_by(
-    #     "-collection__id"
-    # )[:10]
     # products = Product.objects.filter(last_update__year=2021)[:10]
     # products = Product.objects.filter(description__isnull=True)[:10]
     # AND query
@@ -36,14 +33,35 @@ def say_hello(request):
     # products = Product.objects.filter(Q(inventory__lt=10) | Q(unit_price__gt=20))
     # products = Product.objects.filter(Q(inventory__lt=10) | ~Q(unit_price__gt=20))
     # products = Product.objects.filter(inventory=F("unit_price"))
-    products = Product.objects.filter(inventory=F("collection__id"))
+    # products = Product.objects.filter(inventory=F("collection__id"))
+    # products = Product.objects.filter(collection__id__range=(1, 3)).order_by(
+    #     "collection__id"
+    # )[:10]
+    # products = Product.objects.filter(collection__id__range=(3, 5)).order_by(
+    #     "-collection__id"
+    # )
+    # products = Product.objects.order_by("unit_price", "-title")
+    # products = Product.objects.order_by("title", "-unit_price")[:50]
+    # products = Product.objects.order_by("title", "-unit_price").reverse()
+    # products = Product.objects.filter(collection__id=3).order_by("unit_price", "-title")
+    # product = Product.objects.filter(collection__id=3).order_by("unit_price", "-title")[
+    #     0
+    # ]
+    # product = (
+    #     Product.objects.filter(collection__id=3)
+    #     .order_by("unit_price", "-title")
+    #     .first()
+    # )  # next one is equivalent to this one
+    # product = Product.objects.earliest("unit_price")
+    # product = Product.objects.earliest("unit_price", "-title")
+    product = Product.objects.latest("unit_price", "-title")
 
     # return HttpResponse('Hello World')
     # return render(request, 'hello.html', {'name': 'anik'})
-    # return render(request, "hello.html", {"name": "anik", "product": product})
+    return render(request, "hello.html", {"name": "anik", "product": product})
     # return render(request, "hello.html", {"name": "anik", "products": products})
-    return render(
-        request,
-        "hello.html",
-        {"name": "anik", "products": products, "result_count": products.count()},
-    )
+    # return render(
+    #     request,
+    #     "hello.html",
+    #     {"name": "anik", "products": products, "result_count": products.count()},
+    # )

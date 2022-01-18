@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
-from store.models import Product
+from store.models import Product, OrderItem, Order
 
 # Create your views here.
 
@@ -43,6 +43,7 @@ def index(request):
     # products = Product.objects.order_by("unit_price", "-title")
     # products = Product.objects.order_by("title", "-unit_price")[:50]
     # products = Product.objects.order_by("title", "-unit_price").reverse()
+    # product = Product.objects.order_by('unit_price', '-title').first()
     # products = Product.objects.filter(collection__id=3).order_by("unit_price", "-title")
     # product = Product.objects.filter(collection__id=3).order_by("unit_price", "-title")[
     #     0
@@ -54,12 +55,33 @@ def index(request):
     # )  # next one is equivalent to this one
     # product = Product.objects.earliest("unit_price")
     # product = Product.objects.earliest("unit_price", "-title")
-    product = Product.objects.latest("unit_price", "-title")
+    # product = Product.objects.latest("unit_price", "-title")
+    # products = Product.objects.filter(unit_price__lte=30)
+    # products = Product.objects.filter(
+    #     unit_price__lte=30).values('id', 'title')[:20]
+    # products = Product.objects.filter(
+    #     collection__title__icontains='co').values('title', 'id')
+    # products = Product.objects.filter(
+    #     unit_price__gt=20).values_list('id', 'title')  # returns a query set that contains tuples of product information
+
+    # products = Product.objects.filter(id__in=OrderItem.objects.values(
+    #     'product__id').distinct()).order_by('title')
+    # products = Product.objects.filter(id__in=OrderItem.objects.values(
+    #     'product__id').distinct()).order_by('title').values('title', 'unit_price')
+
+    # defer - delays the execution of that portion of query to later when that specific enty in needed
+    # products = Product.objects.only('title', 'unit_price').defer('description')
+    # products = Product.objects.select_related('collection').all()
+    # products = Product.objects.prefetch_related('promotions').all()
+    products = Product.objects.select_related(
+        'collection').prefetch_related('promotions').all()[:20]
+
+    # product = []
 
     # return HttpResponse('Hello World')
     # return render(request, 'hello.html', {'name': 'anik'})
-    return render(request, "hello.html", {"name": "anik", "product": product})
-    # return render(request, "hello.html", {"name": "anik", "products": products})
+    # return render(request, "hello.html", {"name": "anik", "product": product})
+    return render(request, "hello.html", {"name": "anik", "products": products})
     # return render(
     #     request,
     #     "hello.html",

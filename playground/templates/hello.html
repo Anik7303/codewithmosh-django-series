@@ -24,6 +24,13 @@
         {% endfor %}
     </ol>
     {% endif %}
+    {% if orders %}
+    <ol>
+        {% for order in orders %}
+        <li>{{order.id}} - {{order.customer.first_name}}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
     {% if product %}
     <ul>
         <li>{{product.title}}</li>

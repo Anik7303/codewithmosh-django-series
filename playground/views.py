@@ -73,15 +73,20 @@ def index(request):
     # products = Product.objects.only('title', 'unit_price').defer('description')
     # products = Product.objects.select_related('collection').all()
     # products = Product.objects.prefetch_related('promotions').all()
-    products = Product.objects.select_related(
-        'collection').prefetch_related('promotions').all()[:20]
+    # products = Product.objects.select_related(
+    #     'collection').prefetch_related('promotions').all()[:20]
+
+    # Exercise
+    orders_qs = Order.objects.select_related(
+        'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
 
     # product = []
 
     # return HttpResponse('Hello World')
     # return render(request, 'hello.html', {'name': 'anik'})
     # return render(request, "hello.html", {"name": "anik", "product": product})
-    return render(request, "hello.html", {"name": "anik", "products": products})
+    # return render(request, "hello.html", {"name": "anik", "products": products})
+    return render(request, "hello.html", {"name": "anik", "orders": orders_qs})
     # return render(
     #     request,
     #     "hello.html",

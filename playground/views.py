@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F
+from django.db.models.aggregates import Avg, Count, Min, Max, Sum
 from store.models import Product, OrderItem, Order
 
 # Create your views here.
@@ -77,8 +78,17 @@ def index(request):
     #     'collection').prefetch_related('promotions').all()[:20]
 
     # Exercise
-    orders_qs = Order.objects.select_related(
-        'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+    # orders_qs = Order.objects.select_related(
+    #     'customer').prefetch_related('orderitem_set__product').order_by('-placed_at')[:5]
+
+    # Aggregate returns dictionary object not a query set
+    # result will be a dictionary containing an entry name 'id__count'
+    # result = Product.objects.aggregate(Count('id'))
+    # result will be a dictionary containing an entry name 'count'
+    # result = Product.objects.aggregate(count=Count('id'))
+    # multiple aggregate queries entries
+    result = Product.objects.aggregate(count=Count('id'), min_price=Min(
+        'unit_price'), max_price=Max('unit_price'), total_price=Sum('unit_price'))
 
     # product = []
 
@@ -86,7 +96,8 @@ def index(request):
     # return render(request, 'hello.html', {'name': 'anik'})
     # return render(request, "hello.html", {"name": "anik", "product": product})
     # return render(request, "hello.html", {"name": "anik", "products": products})
-    return render(request, "hello.html", {"name": "anik", "orders": orders_qs})
+    # return render(request, "hello.html", {"name": "anik", "orders": orders_qs})
+    return render(request, "hello.html", {"name": "anik", 'result': result})
     # return render(
     #     request,
     #     "hello.html",

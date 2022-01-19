@@ -88,7 +88,7 @@ def index(request):
     # result = Product.objects.aggregate(count=Count('id'))
     # multiple aggregate queries entries
     result = Product.objects.aggregate(count=Count('id'), min_price=Min(
-        'unit_price'), max_price=Max('unit_price'), total_price=Sum('unit_price'))
+        'unit_price'), max_price=Max('unit_price'), total_price=Sum('unit_price'), avg_price=Avg('unit_price'))
 
     # product = []
 

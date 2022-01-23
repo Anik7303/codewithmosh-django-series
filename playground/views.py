@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F
+from django.db.models import Q, F, Value
 from django.db.models.aggregates import Avg, Count, Min, Max, Sum
-from store.models import Product, OrderItem, Order
+from store.models import Product, OrderItem, Order, Customer
 
 # Create your views here.
 
@@ -87,8 +87,13 @@ def index(request):
     # result will be a dictionary containing an entry name 'count'
     # result = Product.objects.aggregate(count=Count('id'))
     # multiple aggregate queries entries
-    result = Product.objects.aggregate(count=Count('id'), min_price=Min(
-        'unit_price'), max_price=Max('unit_price'), total_price=Sum('unit_price'), avg_price=Avg('unit_price'))
+    # result = Product.objects.aggregate(count=Count('id'), min_price=Min(
+    #     'unit_price'), max_price=Max('unit_price'), total_price=Sum('unit_price'), avg_price=Avg('unit_price'))
+
+    # queryset = Customer.objects.annotate(is_new=True) # this line produces an error, value provided to annotate method have to be an expression (use Value, F, Func, Aggregate Classes eg. Sum, Count, Avg etc..)
+    # queryset = Customer.objects.annotate(is_new=Value(True))
+    # queryset = Customer.objects.annotate(new_id=F('id'))
+    queryset = Customer.objects.annotate(new_id=F('id')+1)
 
     # product = []
 
@@ -97,7 +102,8 @@ def index(request):
     # return render(request, "hello.html", {"name": "anik", "product": product})
     # return render(request, "hello.html", {"name": "anik", "products": products})
     # return render(request, "hello.html", {"name": "anik", "orders": orders_qs})
-    return render(request, "hello.html", {"name": "anik", 'result': result})
+    # return render(request, "hello.html", {"name": "anik", 'result': result})
+    return render(request, "hello.html", {"name": "anik", 'result': list(queryset)})
     # return render(
     #     request,
     #     "hello.html",

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Value
+from django.db.models import Q, F, Value, Func
 from django.db.models.aggregates import Avg, Count, Min, Max, Sum
 from store.models import Product, OrderItem, Order, Customer
 
@@ -93,7 +93,11 @@ def index(request):
     # queryset = Customer.objects.annotate(is_new=True) # this line produces an error, value provided to annotate method have to be an expression (use Value, F, Func, Aggregate Classes eg. Sum, Count, Avg etc..)
     # queryset = Customer.objects.annotate(is_new=Value(True))
     # queryset = Customer.objects.annotate(new_id=F('id'))
-    queryset = Customer.objects.annotate(new_id=F('id')+1)
+    # queryset = Customer.objects.annotate(new_id=F('id')+1)
+
+    # Database 'CONCAT' function
+    queryset = Customer.objects.annotate(fullname=Func(
+        F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
 
     # product = []
 

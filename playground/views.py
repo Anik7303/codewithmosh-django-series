@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField, Avg, Count, Min, Max, Sum
 from django.contrib.contenttypes.models import ContentType
 from django.db.models.functions import Concat
-from store.models import Product, OrderItem, Order, Customer
+from store.models import Collection, Product, OrderItem, Order, Customer
 from tags.models import TaggedItem
 
 # Create your views here.
@@ -122,17 +122,27 @@ def index(request):
     #         object_id=1
     #     )
 
-    queryset = TaggedItem.objects.get_tags_for(Product, 5)
+    # queryset = TaggedItem.objects.get_tags_for(Product, 5)
+
+    # One way to create a new entry
+    collection = Collection()
+    collection.title = 'Video Games'
+    collection.featured_product = Product(pk=1)
+    # collection.featured_product_id = 1 # canbe used instead of the previous line
+    collection.save()
+
+    # Another way to create a new entry
+    # collection = Collection.objects.create(title="Video Games", featured_product_id=1)
 
     # product = []
 
     # return HttpResponse('Hello World')
-    # return render(request, 'hello.html', {'name': 'anik'})
+    return render(request, 'hello.html', {'name': 'anik'})
     # return render(request, "hello.html", {"name": "anik", "product": product})
     # return render(request, "hello.html", {"name": "anik", "products": products})
     # return render(request, "hello.html", {"name": "anik", "orders": orders_qs})
     # return render(request, "hello.html", {"name": "anik", 'result': result})
-    return render(request, "hello.html", {"name": "anik", 'result': list(queryset)})
+    # return render(request, "hello.html", {"name": "anik", 'result': list(queryset)})
     # return render(
     #     request,
     #     "hello.html",

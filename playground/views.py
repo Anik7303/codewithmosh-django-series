@@ -4,8 +4,10 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 # from django.db.models.aggregates import Avg, Count, Min, Max, Sum
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField, Avg, Count, Min, Max, Sum
+from django.contrib.contenttypes.models import ContentType
 from django.db.models.functions import Concat
 from store.models import Product, OrderItem, Order, Customer
+from tags.models import TaggedItem
 
 # Create your views here.
 
@@ -108,9 +110,17 @@ def index(request):
     # queryset = Customer.objects.annotate(orders_count=Count('order'), full_name=Func(
     #     F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
 
-    discounted_price = ExpressionWrapper(
-        F('unit_price') * 0.8, output_field=DecimalField())
-    queryset = Product.objects.annotate(discounted_price=discounted_price)
+    # discounted_price = ExpressionWrapper(
+    #     F('unit_price') * 0.8, output_field=DecimalField())
+    # queryset = Product.objects.annotate(discounted_price=discounted_price)
+
+    content_type = ContentType.objects.get_for_model(Product)
+    queryset = TaggedItem.objects \
+        .select_related('tag') \
+        .filter(
+            content_type=content_type,
+            object_id=1
+        )
 
     # product = []
 

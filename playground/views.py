@@ -147,11 +147,18 @@ def index(request):
     # collection.save()
 
     # Or another way to update
-    collection = Collection.objects \
-        .filter(pk=12) \
-        .update(
-            featured_product=Product(pk=3)
-        )
+    # collection = Collection.objects \
+    #     .filter(pk=12) \
+    #     .update(
+    #         featured_product=Product(pk=3)
+    #     )
+
+    # One way to delete objects
+    # collection = Collection(pk=12)
+    # collection.delete()
+
+    # Another way
+    Collection.objects.filter(id__gt=10).delete()
 
     # product = []
 

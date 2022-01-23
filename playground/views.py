@@ -100,8 +100,12 @@ def index(request):
     # queryset = Customer.objects.annotate(fullname=Func(
     #     F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
 
-    queryset = Customer.objects.annotate(
-        full_name=Concat('first_name', Value(' '), 'last_name'))
+    # queryset = Customer.objects.annotate(
+    #     full_name=Concat('first_name', Value(' '), 'last_name'))
+
+    # queryset = Customer.objects.annotate(orders_count=Count('order'))
+    queryset = Customer.objects.annotate(orders_count=Count('order'), full_name=Func(
+        F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
 
     # product = []
 

@@ -125,14 +125,33 @@ def index(request):
     # queryset = TaggedItem.objects.get_tags_for(Product, 5)
 
     # One way to create a new entry
-    collection = Collection()
-    collection.title = 'Video Games'
-    collection.featured_product = Product(pk=1)
-    # collection.featured_product_id = 1 # canbe used instead of the previous line
-    collection.save()
+    # collection = Collection()
+    # collection.title = 'Video Games'
+    # collection.featured_product = Product(pk=1)
+    # # collection.featured_product_id = 1 # canbe used instead of the previous line
+    # collection.save()
 
     # Another way to create a new entry
-    # collection = Collection.objects.create(title="Video Games", featured_product_id=1)
+    # collection = Collection.objects.create(
+    #     title="Video Games 2", featured_product_id=3)
+
+    # Updating objects but there's a problem if not all fields are updated
+    # collection = Collection(pk=12)
+    # collection.title = 'Games'
+    # collection.featured_product = None
+    # collection.save()
+
+    # A better way to update is this one
+    # collection = Collection.objects.get(pk=11)
+    # collection.featured_product = None
+    # collection.save()
+
+    # Or another way to update
+    collection = Collection.objects \
+        .filter(pk=12) \
+        .update(
+            featured_product=Product(pk=3)
+        )
 
     # product = []
 

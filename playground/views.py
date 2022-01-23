@@ -1,8 +1,9 @@
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q, F, Value, Func
-from django.db.models.aggregates import Avg, Count, Min, Max, Sum
+# from django.db.models.aggregates import Avg, Count, Min, Max, Sum
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField, Avg, Count, Min, Max, Sum
 from django.db.models.functions import Concat
 from store.models import Product, OrderItem, Order, Customer
 
@@ -104,8 +105,12 @@ def index(request):
     #     full_name=Concat('first_name', Value(' '), 'last_name'))
 
     # queryset = Customer.objects.annotate(orders_count=Count('order'))
-    queryset = Customer.objects.annotate(orders_count=Count('order'), full_name=Func(
-        F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
+    # queryset = Customer.objects.annotate(orders_count=Count('order'), full_name=Func(
+    #     F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
+
+    discounted_price = ExpressionWrapper(
+        F('unit_price') * 0.8, output_field=DecimalField())
+    queryset = Product.objects.annotate(discounted_price=discounted_price)
 
     # product = []
 

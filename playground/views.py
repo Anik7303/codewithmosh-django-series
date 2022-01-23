@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q, F, Value, Func
 from django.db.models.aggregates import Avg, Count, Min, Max, Sum
+from django.db.models.functions import Concat
 from store.models import Product, OrderItem, Order, Customer
 
 # Create your views here.
@@ -96,8 +97,11 @@ def index(request):
     # queryset = Customer.objects.annotate(new_id=F('id')+1)
 
     # Database 'CONCAT' function
-    queryset = Customer.objects.annotate(fullname=Func(
-        F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
+    # queryset = Customer.objects.annotate(fullname=Func(
+    #     F('first_name'), Value(' '), F('last_name'), function='CONCAT'))
+
+    queryset = Customer.objects.annotate(
+        full_name=Concat('first_name', Value(' '), 'last_name'))
 
     # product = []
 
